@@ -18,6 +18,7 @@ import manager_core as core
 import cm_global
 import folder_paths
 import nodes
+import base64
 
 version = 1.30
 
@@ -77,7 +78,6 @@ async def deleteImage(request):
 
 # we override the original ComfyUI\nodes.py class LoadImage to list subfolders
 class LoadImageThumbnails:
-# class LoadImage:
   @classmethod
   def INPUT_TYPES(s):
     input_dir = folder_paths.get_input_directory()
@@ -103,11 +103,32 @@ class LoadImageThumbnails:
     }
 
   CATEGORY = "image"
-
   RETURN_TYPES = ("IMAGE", "MASK")
   FUNCTION = "load_image"
 
   def load_image(self, image):
+    image_path = folder_paths.get_annotated_filepath(image)
+    img = Image.open(image_path)
+    i = ImageOps.exif_transpose(img)
+    image = i.convert("RGB")
+    image = np.array(image).astype(np.float32) / 255.0
+    image = torch.from_numpy(image)[None,]
+    if 'A' in i.getbands():
+        mask = np.array(i.getchannel('A')).astype(np.float32) / 255.0
+        mask = 1. - torch.from_numpy(mask)
+    else:
+        mask = torch.zeros((64, 64), dtype=torch.float32, device="cpu")
+    return (image, mask.unsqueeze(0))
+  
+  @classmethod
+  def VALIDATE_INPUTS(s, image):
+    if not folder_paths.exists_annotated_filepath(image):
+      return "Invalid image file: {}".format(image)
+
+    return True
+
+"""
+  def Xload_imageX(self, image):
     image_path = folder_paths.get_annotated_filepath(image)
     
     # Open the image without using node_helpers
@@ -161,13 +182,9 @@ class LoadImageThumbnails:
     with open(image_path, 'rb') as f:
       m.update(f.read())
     return m.digest().hex()
+"""
 
-  @classmethod
-  def VALIDATE_INPUTS(s, image):
-    if not folder_paths.exists_annotated_filepath(image):
-      return "Invalid image file: {}".format(image)
-
-    return True
+  
 
 
 NODE_CLASS_MAPPINGS = {
@@ -175,5 +192,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-  'LoadImage': 'Load Image +Tumbnails',
+  'LoadImageThumbnails': 'Load Image +Tumbnails',
 }
