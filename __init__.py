@@ -8,19 +8,20 @@
 """
 
 # this works to remove a class, but then we cannot replace it somehow
-import nodes
+#import nodes
 # print(f"nodes.NODE_CLASS_MAPPINGS {nodes.NODE_CLASS_MAPPINGS}")                              # {'LoadImage': <class ..>, .. }
 # print(f"nodes.NODE_CLASS_MAPPINGS['LoadImage'] {nodes.NODE_CLASS_MAPPINGS['LoadImage']}")    # <class 'nodes.LoadImage'>
 # nodes.NODE_CLASS_MAPPINGS = dict(
   # filter((lambda item: not item[0] == "LoadImage"), nodes.NODE_CLASS_MAPPINGS.items())
 # )
 
-from .ComfyUIThumbnails import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+#from .ComfyUIThumbnails import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+from nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
 # print(f"nodes.NODE_CLASS_MAPPINGS {NODE_CLASS_MAPPINGS}")                                 # {'LoadImage': <class 'ComfyUI-Thumbnails.ComfyUIThumbnails.LoadImageThumbnails'>}
 
 # we overwrite the original LoadImage from ComfyUI and I'm not sure it's the right thing to do
 # nodes.NODE_CLASS_MAPPINGS['LoadImage'] = NODE_CLASS_MAPPINGS['LoadImage']
-nodes.NODE_CLASS_MAPPINGS['LoadImage'] = NODE_CLASS_MAPPINGS['LoadImageThumbnails']
+#nodes.NODE_CLASS_MAPPINGS['LoadImage'] = NODE_CLASS_MAPPINGS['LoadImageThumbnails']
 
 WEB_DIRECTORY = "./web"
 

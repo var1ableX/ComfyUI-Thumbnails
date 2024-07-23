@@ -75,7 +75,7 @@ async def deleteImage(request):
   print(f"ComfyUIThumbnails 400 no filename", file=sys.stderr)
   return web.json_response(res, status=400, content_type='application/json')
 
-
+'''
 # we override the original ComfyUI\nodes.py class LoadImage to list subfolders
 class LoadImageThumbnails:
   @classmethod
@@ -126,6 +126,7 @@ class LoadImageThumbnails:
       return "Invalid image file: {}".format(image)
 
     return True
+'''
 
 """
   def Xload_imageX(self, image):
@@ -185,7 +186,7 @@ class LoadImageThumbnails:
 """
 
   
-
+"""
 
 NODE_CLASS_MAPPINGS = {
   'LoadImageThumbnails': LoadImageThumbnails,
@@ -194,3 +195,5 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
   'LoadImageThumbnails': 'Load Image +Tumbnails',
 }
+
+"""
